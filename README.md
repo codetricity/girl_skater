@@ -1,4 +1,6 @@
-# vel5
+# Girl Skater
+
+![screenshot](readme/screenshot.gif)
 
 ## Credits
 
