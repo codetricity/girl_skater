@@ -23,9 +23,10 @@ class MyGame extends FlameGame with HasCollisionDetection, TapDetector {
   final double pushForce = 55;
   Skater skater = Skater();
   bool initialFall = true;
-  late SpriteAnimation pushAnimation;
-  late SpriteAnimation rideOnlyAnimation;
+
   late SpriteAnimation idleAnimation;
+  late List<Sprite> pushSprites;
+  late List<Sprite> rideOnlySprites;
 
   @override
   Future<void> onLoad() async {
@@ -44,21 +45,12 @@ class MyGame extends FlameGame with HasCollisionDetection, TapDetector {
         size: Vector2(size.x * .2, ground.height * 2),
         position: Vector2(size.x * .5, size.y - 4 * ground.height));
     add(ground3);
-    List<Sprite> rideOnlySprites =
-        await fromJSONAtlas('ride_only.png', 'ride_only.json');
-    rideOnlyAnimation =
-        SpriteAnimation.spriteList(rideOnlySprites, stepTime: 0.1, loop: true);
-
-    List<Sprite> pushSprites =
-        await fromJSONAtlas('skater_push.png', 'skater_push.json');
-    pushAnimation =
-        SpriteAnimation.spriteList(pushSprites, stepTime: 0.1, loop: true);
+    pushSprites = await fromJSONAtlas('skater_push.png', 'skater_push.json');
+    rideOnlySprites = await fromJSONAtlas('ride_only.png', 'ride_only.json');
 
     idleAnimation = SpriteAnimation.spriteList(
         await fromJSONAtlas('idle.png', 'idle.json'),
         stepTime: 0.1);
-
-    skater.animation = rideOnlyAnimation;
 
     var frameSize = rideOnlySprites.first.srcSize;
     skater.size = frameSize * .75;
@@ -84,10 +76,10 @@ class MyGame extends FlameGame with HasCollisionDetection, TapDetector {
       if (!skater.isJumping) {
         skater.velocity.x = -pushForce;
         // change animation to pushing
-        skater.animation = pushAnimation;
+        skater.animation = skater.pushAnimation;
         Future.delayed(Duration(milliseconds: 1200), () {
           print('change to ride only animation');
-          skater.animation = rideOnlyAnimation;
+          skater.animation = skater.rideOnlyAnimation;
         });
       }
 
@@ -101,10 +93,10 @@ class MyGame extends FlameGame with HasCollisionDetection, TapDetector {
         skater.velocity.x = pushForce;
         // change animation to pushing
 
-        skater.animation = pushAnimation;
-        Future.delayed(Duration(milliseconds: 1200), () {
+        skater.animation = skater.pushAnimation;
+        Future.delayed(const Duration(milliseconds: 1200), () {
           print('change to ride only animation');
-          skater.animation = rideOnlyAnimation;
+          skater.animation = skater.rideOnlyAnimation;
         });
       }
     }
