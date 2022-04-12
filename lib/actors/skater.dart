@@ -20,7 +20,7 @@ class Skater extends SpriteAnimationComponent
     await super.onLoad();
 
     add(RectangleHitbox(
-        size: Vector2(width * .6, height),
+        size: Vector2(width * .4, height),
         position: Vector2(width / 2, height),
         anchor: Anchor.bottomCenter));
   }
@@ -56,7 +56,12 @@ class Skater extends SpriteAnimationComponent
       if (velocity.x < 0) {
         velocity.x = 0;
       }
+
       x += velocity.x * dt;
+    }
+
+    if (velocity.x == 0) {
+      animation = gameRef.idleAnimation;
     }
   }
 
@@ -65,9 +70,22 @@ class Skater extends SpriteAnimationComponent
     super.onCollision(intersectionPoints, other);
     if (other is Ground) {
       if (velocity.y > 0) {
-        velocity.y = 0;
-        print('hit ground');
-        isJumping = false;
+        // check to see if the two x intersection points
+        // are really close together, which will indicate
+        // that the skater is intersecting with the side
+        // of the ground block
+        if (intersectionPoints.length == 2) {
+          var x1 = intersectionPoints.first[0];
+          var x2 = intersectionPoints.last[0];
+          if ((x1 - x2).abs() < 2) {
+            print('hit side, $y, $intersectionPoints');
+            velocity.y = 100;
+          } else {
+            print('hit ground, ');
+            velocity.y = 0;
+            isJumping = false;
+          }
+        }
 
         if (gameRef.initialFall) {
           y -= 10;

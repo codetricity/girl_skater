@@ -23,6 +23,7 @@ class MyGame extends FlameGame with HasCollisionDetection, TapDetector {
   bool initialFall = true;
   late SpriteAnimation pushAnimation;
   late SpriteAnimation rideOnlyAnimation;
+  late SpriteAnimation idleAnimation;
 
   @override
   Future<void> onLoad() async {
@@ -50,6 +51,10 @@ class MyGame extends FlameGame with HasCollisionDetection, TapDetector {
         await fromJSONAtlas('skater_push.png', 'skater_push.json');
     pushAnimation =
         SpriteAnimation.spriteList(pushSprites, stepTime: 0.1, loop: true);
+
+    idleAnimation = SpriteAnimation.spriteList(
+        await fromJSONAtlas('idle.png', 'idle.json'),
+        stepTime: 0.1);
 
     skater.animation = rideOnlyAnimation;
 

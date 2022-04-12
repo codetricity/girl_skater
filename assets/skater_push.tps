@@ -136,7 +136,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename></filename>
+                <filename>skater_push.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
