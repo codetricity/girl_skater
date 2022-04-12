@@ -7,6 +7,8 @@ import 'package:flutter/material.dart' hide Image;
 import 'package:flame_texturepacker/flame_texturepacker.dart';
 import 'package:vel5/actors/skater.dart';
 
+import 'world/ground.dart';
+
 void main() {
   runApp(GameWidget(game: MyGame()));
 }
@@ -106,29 +108,5 @@ class MyGame extends FlameGame with HasCollisionDetection, TapDetector {
         });
       }
     }
-  }
-}
-
-class Ground extends PositionComponent {
-  Ground({required size, required position})
-      : super(size: size, position: position) {
-    debugMode = true;
-  }
-
-  @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-    add(RectangleHitbox());
-  }
-
-  @override
-  void render(Canvas canvas) {
-    super.render(canvas);
-    drawGround(canvas);
-  }
-
-  void drawGround(canvas) {
-    canvas.drawRect(Rect.fromLTWH(0, 0, width, height),
-        Paint()..color = Colors.brown.shade300);
   }
 }

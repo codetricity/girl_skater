@@ -2,6 +2,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 import '../main.dart';
+import '../world/ground.dart';
 
 class Skater extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef<MyGame> {
