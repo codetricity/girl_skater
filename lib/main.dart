@@ -20,6 +20,9 @@ class MyGame extends FlameGame with HasCollisionDetection, TapDetector {
   final double groundFriction = .15;
   final double pushForce = 55;
   Skater skater = Skater();
+  bool initialFall = true;
+  late SpriteAnimation pushAnimation;
+  late SpriteAnimation rideOnlyAnimation;
 
   @override
   Future<void> onLoad() async {
@@ -38,10 +41,19 @@ class MyGame extends FlameGame with HasCollisionDetection, TapDetector {
         size: Vector2(size.x * .2, ground.height * 2),
         position: Vector2(size.x * .5, size.y - 4 * ground.height));
     add(ground3);
-    List<Sprite> sprites =
-        await fromJSONAtlas('skater_sheet.png', 'skater_sheet.json');
-    skater.animation = SpriteAnimation.spriteList(sprites, stepTime: 0.1);
-    var frameSize = sprites.first.srcSize;
+    List<Sprite> rideOnlySprites =
+        await fromJSONAtlas('ride_only.png', 'ride_only.json');
+    rideOnlyAnimation =
+        SpriteAnimation.spriteList(rideOnlySprites, stepTime: 0.1, loop: true);
+
+    List<Sprite> pushSprites =
+        await fromJSONAtlas('skater_push.png', 'skater_push.json');
+    pushAnimation =
+        SpriteAnimation.spriteList(pushSprites, stepTime: 0.1, loop: true);
+
+    skater.animation = rideOnlyAnimation;
+
+    var frameSize = rideOnlySprites.first.srcSize;
     skater.size = frameSize * .75;
     add(skater);
   }
@@ -64,7 +76,14 @@ class MyGame extends FlameGame with HasCollisionDetection, TapDetector {
       }
       if (!skater.isJumping) {
         skater.velocity.x = -pushForce;
+        // change animation to pushing
+        skater.animation = pushAnimation;
+        Future.delayed(Duration(milliseconds: 1200), () {
+          print('change to ride only animation');
+          skater.animation = rideOnlyAnimation;
+        });
       }
+
       // tap on right side of screen to move right
     } else if (info.eventPosition.game.x > size.x - skater.width) {
       if (!skater.facingRight) {
@@ -73,6 +92,13 @@ class MyGame extends FlameGame with HasCollisionDetection, TapDetector {
       }
       if (!skater.isJumping) {
         skater.velocity.x = pushForce;
+        // change animation to pushing
+
+        skater.animation = pushAnimation;
+        Future.delayed(Duration(milliseconds: 1200), () {
+          print('change to ride only animation');
+          skater.animation = rideOnlyAnimation;
+        });
       }
     }
   }

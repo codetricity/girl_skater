@@ -1,6 +1,5 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame_texturepacker/flame_texturepacker.dart';
 
 import '../main.dart';
 
@@ -20,7 +19,10 @@ class Skater extends SpriteAnimationComponent
   Future<void> onLoad() async {
     await super.onLoad();
 
-    add(RectangleHitbox());
+    add(RectangleHitbox(
+        size: Vector2(width * .6, height),
+        position: Vector2(width / 2, height),
+        anchor: Anchor.bottomCenter));
   }
 
   @override
@@ -66,6 +68,11 @@ class Skater extends SpriteAnimationComponent
         velocity.y = 0;
         print('hit ground');
         isJumping = false;
+
+        if (gameRef.initialFall) {
+          y -= 10;
+          gameRef.initialFall = false;
+        }
       }
 
       if (velocity.x != 0) {
