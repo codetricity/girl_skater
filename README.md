@@ -2,6 +2,10 @@
 
 ![screenshot](readme/screenshot.gif)
 
+## Web Demonstration
+
+https://codetricity.github.io/girl_skater/
+
 ## Project Learning Objectives
 
 * practice using Flame 1.1 collision detection
